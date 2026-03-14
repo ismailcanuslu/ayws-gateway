@@ -45,6 +45,9 @@ func Setup(cfg *config.Config) *fiber.App {
 	// ── Health (gateway kendi endpoint'i) ────────────────────────────────────
 	app.Get("/health", handler.Health)
 
+	// ── Prometheus metrics ────────────────────────────────────────────────────
+	app.Get("/metrics", handler.Metrics())
+
 	// ── Reverse Proxy ─────────────────────────────────────────────────────────
 	rp := proxy.New(cfg.Routes)
 

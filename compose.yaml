@@ -1,0 +1,35 @@
+version: "3.9"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# AYWS — Gateway Compose
+# Başlat: docker compose up -d
+# Not: Geliştirmede gateway doğrudan `make run` ile çalıştırılır.
+#       Bu dosya production-style container çalıştırma içindir.
+# ─────────────────────────────────────────────────────────────────────────────
+
+networks:
+  ayws-internal:
+    external: true      # security-compose tarafından oluşturulur
+
+services:
+
+  # ── AYWS Gateway ────────────────────────────────────────────────────────────
+  ayws-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ayws-gateway
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      GATEWAY_SERVER_PORT: 8000
+      GATEWAY_KEYCLOAK_BASE_URL: http://ayws-keycloak:8080
+    networks:
+      - ayws-internal
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 5s

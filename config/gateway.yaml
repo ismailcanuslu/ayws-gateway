@@ -19,6 +19,15 @@ routes:
   - prefix: /api/auth
     upstream: http://localhost:5001
     public: true          # JWT doğrulama atlanır
+  - prefix: /realms
+    upstream: http://localhost:8080
+    public: true          # Keycloak token endpoint — JWT doğrulama atlanır
   - prefix: /api/tenants
     upstream: http://localhost:5001
     public: false
+  - prefix: /api/users
+    upstream: http://localhost:5001
+    public: false         # Bearer token zorunlu
+  - prefix: /api/compute
+    upstream: http://localhost:8001
+    public: false         # Bearer token zorunlu
