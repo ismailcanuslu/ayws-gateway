@@ -8,6 +8,8 @@ import (
 	"syscall"
 	"time"
 
+        "github.com/gofiber/fiber/v2/middleware/cors"
+
 	"github.com/ismailcanuslu/ayws-gateway/config"
 	"github.com/ismailcanuslu/ayws-gateway/internal/middleware"
 	"github.com/ismailcanuslu/ayws-gateway/internal/router"
@@ -39,6 +41,12 @@ func main() {
 
 	// ── Fiber app ────────────────────────────────────────────────────────────
 	app := router.Setup(cfg)
+        app.Use(cors.New(cors.Config{
+        AllowOrigins:     "https://ayws.anadoluyazilim.com.tr",
+        AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
+        AllowMethods:     "GET, POST, PUT, DELETE, OPTIONS",
+        AllowCredentials: true,
+        }))
 
 	// ── Graceful shutdown ─────────────────────────────────────────────────────
 	quit := make(chan os.Signal, 1)
